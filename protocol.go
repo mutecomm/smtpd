@@ -23,14 +23,13 @@ type command struct {
 }
 
 func parseLine(line string) (cmd command) {
-
 	cmd.line = line
 	cmd.fields = strings.Fields(line)
-
 	if len(cmd.fields) > 0 {
 		cmd.action = strings.ToUpper(cmd.fields[0])
 		if len(cmd.fields) > 1 {
-			cmd.params = strings.Split(cmd.fields[1], ":")
+			cmd.params = strings.Split(strings.Join(cmd.fields[1:], " "), ":")
+			// cmd.params = strings.Split(cmd.fields[1], ":")
 		}
 	}
 
@@ -181,7 +180,6 @@ func (session *session) handleMAIL(cmd command) {
 		session.reply(502, "Duplicate MAIL")
 		return
 	}
-
 	addr, err := parseAddress(cmd.params[1])
 
 	if err != nil {
