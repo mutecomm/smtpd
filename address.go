@@ -10,9 +10,12 @@ func parseAddress(src string) (string, error) {
 	if src == "" {
 		return "", fmt.Errorf("No address given%s", "")
 	}
-	if src[0] != '<' || src[len(src)-1] != '>' {
+	posBegin := strings.Index(src, "<")
+	posEnd := strings.Index(src, ">")
+	if posBegin > posEnd || posBegin < 0 || posEnd < 0 {
 		return "", fmt.Errorf("Ill-formatted e-mail address: %s", src)
 	}
+	src = src[posBegin : posEnd+1]
 
 	if strings.Count(src, "@") > 1 {
 		return "", fmt.Errorf("Ill-formatted e-mail address: %s", src)
